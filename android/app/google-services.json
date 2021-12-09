@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "62048379158",
+    "project_id": "web-app-a6290",
+    "storage_bucket": "web-app-a6290.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62048379158:android:0952751d20769eaa293037",
+        "android_client_info": {
+          "package_name": "tarikulislam.webapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62048379158-updm3v1m7io75a2f92058emtb63pk1rb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGPpASMan9uqeI8HgG8EOyX5DpaOgfnEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62048379158-updm3v1m7io75a2f92058emtb63pk1rb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
