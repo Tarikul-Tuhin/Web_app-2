@@ -1,19 +1,23 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_database/firebase_database.dart';
 
-
-
-
+final _firestore = FirebaseFirestore.instance;
 
 void main() async {
-  
-
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: "AIzaSyDCZOKOSOJh7NbBrfEY_PoNumJX8iUDtmo",
+      appId: "1:62048379158:web:22eee593b44094a7293037",
+      messagingSenderId: "62048379158",
+      projectId: "web-app-a6290",
+    ),
+  );
   runApp(MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   @override
@@ -22,27 +26,15 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
-
-
-final _firestore = FirebaseFirestore.instance;
-
 class HomePage extends StatefulWidget {
-
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   String? name;
   String? qty;
   String? details;
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +57,9 @@ class _HomePageState extends State<HomePage> {
                         flex: -1,
                         child: Column(
                           children: [
-                             SizedBox(
-                              //height: 120.0,
-                            ),
+                            SizedBox(
+                                //height: 120.0,
+                                ),
                             Container(
                               width: 400.0,
                               child: TextField(
@@ -77,11 +69,12 @@ class _HomePageState extends State<HomePage> {
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Name',
-                                  contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 0.0, horizontal: 10.0),
                                 ),
                               ),
                             ),
-                             SizedBox(
+                            SizedBox(
                               height: 10.0,
                             ),
                             Container(
@@ -93,11 +86,12 @@ class _HomePageState extends State<HomePage> {
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Qty',
-                                  contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 0.0, horizontal: 10.0),
                                 ),
                               ),
                             ),
-                             SizedBox(
+                            SizedBox(
                               height: 10.0,
                             ),
                             Container(
@@ -109,16 +103,15 @@ class _HomePageState extends State<HomePage> {
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Details',
-                                  contentPadding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 50, horizontal: 10),
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Expanded(
-                          flex: 1,
-                          child: Container()),
+                      Expanded(flex: 1, child: Container()),
                       Expanded(
                         flex: 6,
                         child: Image.network(
@@ -130,16 +123,14 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Expanded(
                         flex: 8,
-                        child: Container(
-                        ),
+                        child: Container(),
                       ),
-
                     ],
                   ),
                 ),
                 Row(
                   children: [
-                     SizedBox(
+                    SizedBox(
                       width: 168.0,
                     ),
                     ElevatedButton.icon(
@@ -148,7 +139,6 @@ class _HomePageState extends State<HomePage> {
                           'name': name,
                           'quantity': qty,
                           'details': details,
-
                         });
                         //print(messageText);
                       },
@@ -157,12 +147,12 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                 SizedBox(
+                SizedBox(
                   height: 50.0,
                 ),
                 Row(
                   children: [
-                     SizedBox(
+                    SizedBox(
                       width: 167.0,
                     ),
                     Expanded(
@@ -179,9 +169,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Expanded(
                       flex: 8,
-                      child: Container(
-
-                      ),
+                      child: Container(),
                     ),
                     Expanded(
                       flex: 2,
@@ -194,9 +182,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    Expanded(
-                        flex: 2,
-                        child: Container()),
+                    Expanded(flex: 2, child: Container()),
                   ],
                 ),
                 Container(
@@ -204,12 +190,11 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     children: [
                       DataTable(
-                        columns:  <DataColumn>[
+                        columns: <DataColumn>[
                           DataColumn(
                             label: Text(
                               'SL',
                               style: TextStyle(fontStyle: FontStyle.italic),
-
                             ),
                           ),
                           DataColumn(
@@ -237,27 +222,31 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ],
-                        rows:  <DataRow>[
+                        rows: <DataRow>[
                           DataRow(
                             cells: <DataCell>[
                               DataCell(Text('1')),
                               DataCell(Text('Burger')),
                               DataCell(Text('2.5 KG')),
                               DataCell(Text('Naga Burger with Chicken')),
-                              DataCell(Image.network('https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
-                                height: 40.0, width: 40.0,)),
-
+                              DataCell(Image.network(
+                                'https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
+                                height: 40.0,
+                                width: 40.0,
+                              )),
                             ],
                           ),
-
                           DataRow(
                             cells: <DataCell>[
                               DataCell(Text('2')),
                               DataCell(Text('Burger')),
                               DataCell(Text('2.5 KG')),
                               DataCell(Text('Naga Burger with Chicken')),
-                              DataCell(Image.network('https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
-                                height: 40.0, width: 40.0,)),
+                              DataCell(Image.network(
+                                'https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
+                                height: 40.0,
+                                width: 40.0,
+                              )),
                             ],
                           ),
                           DataRow(
@@ -266,8 +255,11 @@ class _HomePageState extends State<HomePage> {
                               DataCell(Text('Burger')),
                               DataCell(Text('2.5 KG')),
                               DataCell(Text('Naga Burger with Chicken')),
-                              DataCell(Image.network('https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
-                                height: 40.0, width: 40.0,)),
+                              DataCell(Image.network(
+                                'https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
+                                height: 40.0,
+                                width: 40.0,
+                              )),
                             ],
                           ),
                           DataRow(
@@ -276,8 +268,11 @@ class _HomePageState extends State<HomePage> {
                               DataCell(Text('Burger')),
                               DataCell(Text('2.5 KG')),
                               DataCell(Text('Naga Burger with Chicken')),
-                              DataCell(Image.network('https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
-                                height: 40.0, width: 40.0,)),
+                              DataCell(Image.network(
+                                'https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
+                                height: 40.0,
+                                width: 40.0,
+                              )),
                             ],
                           ),
                         ],
@@ -294,4 +289,35 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-
+//class MessagesStream extends StatelessWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    return StreamBuilder<QuerySnapshot>(
+//      stream: _firestore
+//          .collection('message')
+//          .orderBy('time', descending: false)
+//          .snapshots(),
+//      builder: (context, snapshot) {
+//        if (!snapshot.hasData) {
+//          return Center(
+//            child: CircularProgressIndicator(
+//              backgroundColor: Colors.lightBlueAccent,
+//            ),
+//          );
+//        }
+//        return new ListView.builder(itemBuilder: (context, index) {
+//          DocumentSnapshot ds = snapshot.data!.docs[index];
+//          return new Text(ds['name']);
+//        });
+//      },
+//    );
+//    FlatButton(
+//      child: Container(),
+//      onPressed: (){
+//        _firestore.collection('message')
+//            .doc()
+//            .set({'name': 'NEWWWWW'});
+//      }
+//    );
+//  }
+//}
