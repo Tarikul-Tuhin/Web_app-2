@@ -39,6 +39,7 @@ dependencies:
   firebase_storage: ^10.2.3
   firebase_database: ^9.0.3
   syncfusion_flutter_datagrid: ^19.3.57
+  provider: ^6.0.1
 
 dev_dependencies:
   flutter_test:
