@@ -6,6 +6,10 @@ import 'package:firebase_database/firebase_database.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
+String? name;
+String? qty;
+String? details;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -32,9 +36,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String? name;
-  String? qty;
-  String? details;
+
 
   @override
   Widget build(BuildContext context) {
@@ -189,94 +191,122 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.only(left: 167.0),
                   child: Row(
                     children: [
-                      DataTable(
-                        columns: <DataColumn>[
-                          DataColumn(
-                            label: Text(
-                              'SL',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Name',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Qty',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Details',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'IMG',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ],
-                        rows: <DataRow>[
-                          DataRow(
-                            cells: <DataCell>[
-                              DataCell(Text('1')),
-                              DataCell(Text('Burger')),
-                              DataCell(Text('2.5 KG')),
-                              DataCell(Text('Naga Burger with Chicken')),
-                              DataCell(Image.network(
-                                'https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
-                                height: 40.0,
-                                width: 40.0,
-                              )),
-                            ],
-                          ),
-                          DataRow(
-                            cells: <DataCell>[
-                              DataCell(Text('2')),
-                              DataCell(Text('Burger')),
-                              DataCell(Text('2.5 KG')),
-                              DataCell(Text('Naga Burger with Chicken')),
-                              DataCell(Image.network(
-                                'https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
-                                height: 40.0,
-                                width: 40.0,
-                              )),
-                            ],
-                          ),
-                          DataRow(
-                            cells: <DataCell>[
-                              DataCell(Text('3')),
-                              DataCell(Text('Burger')),
-                              DataCell(Text('2.5 KG')),
-                              DataCell(Text('Naga Burger with Chicken')),
-                              DataCell(Image.network(
-                                'https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
-                                height: 40.0,
-                                width: 40.0,
-                              )),
-                            ],
-                          ),
-                          DataRow(
-                            cells: <DataCell>[
-                              DataCell(Text('4')),
-                              DataCell(Text('Burger')),
-                              DataCell(Text('2.5 KG')),
-                              DataCell(Text('Naga Burger with Chicken')),
-                              DataCell(Image.network(
-                                'https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
-                                height: 40.0,
-                                width: 40.0,
-                              )),
-                            ],
-                          ),
-                        ],
-                      ),
+                      // DataTable(
+                      //   columns: <DataColumn>[
+                      //     DataColumn(
+                      //       label: Text(
+                      //         'SL',
+                      //         style: TextStyle(fontStyle: FontStyle.italic),
+                      //       ),
+                      //     ),
+                      //     DataColumn(
+                      //       label: Text(
+                      //         'Name',
+                      //         style: TextStyle(fontStyle: FontStyle.italic),
+                      //       ),
+                      //     ),
+                      //     DataColumn(
+                      //       label: Text(
+                      //         'Qty',
+                      //         style: TextStyle(fontStyle: FontStyle.italic),
+                      //       ),
+                      //     ),
+                      //     DataColumn(
+                      //       label: Text(
+                      //         'Details',
+                      //         style: TextStyle(fontStyle: FontStyle.italic),
+                      //       ),
+                      //     ),
+                      //     DataColumn(
+                      //       label: Text(
+                      //         'IMG',
+                      //         style: TextStyle(fontStyle: FontStyle.italic),
+                      //       ),
+                      //     ),
+                      //   ],
+                      //   rows: <DataRow>[
+                      //     DataRow(
+                      //       cells: <DataCell>[
+                      //         DataCell(Text('1')),
+                      //         DataCell(Text('Burger')),
+                      //         DataCell(Text('2.5 KG')),
+                      //         DataCell(Text('Naga Burger with Chicken')),
+                      //         DataCell(Image.network(
+                      //           'https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
+                      //           height: 40.0,
+                      //           width: 40.0,
+                      //         )),
+                      //       ],
+                      //     ),
+                      //     DataRow(
+                      //       cells: <DataCell>[
+                      //         DataCell(Text('2')),
+                      //         DataCell(Text('Burger')),
+                      //         DataCell(Text('2.5 KG')),
+                      //         DataCell(Text('Naga Burger with Chicken')),
+                      //         DataCell(Image.network(
+                      //           'https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
+                      //           height: 40.0,
+                      //           width: 40.0,
+                      //         )),
+                      //       ],
+                      //     ),
+                      //     DataRow(
+                      //       cells: <DataCell>[
+                      //         DataCell(Text('3')),
+                      //         DataCell(Text('Burger')),
+                      //         DataCell(Text('2.5 KG')),
+                      //         DataCell(Text('Naga Burger with Chicken')),
+                      //         DataCell(Image.network(
+                      //           'https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
+                      //           height: 40.0,
+                      //           width: 40.0,
+                      //         )),
+                      //       ],
+                      //     ),
+                      //     DataRow(
+                      //       cells: <DataCell>[
+                      //         DataCell(Text('4')),
+                      //         DataCell(Text('Burger')),
+                      //         DataCell(Text('2.5 KG')),
+                      //         DataCell(Text('Naga Burger with Chicken')),
+                      //         DataCell(Image.network(
+                      //           'https://i.picsum.photos/id/981/200/200.jpg?hmac=LRIdIKhx3zHhDGgKVGHBdRjNRrgVbpWUw02O7Uuy2C4',
+                      //           height: 40.0,
+                      //           width: 40.0,
+                      //         )),
+                      //       ],
+                      //     ),
+                      //   ],
+                      // ),
+
+                        StreamBuilder<QuerySnapshot>(
+                            stream: _firestore.collection('message').orderBy('time', descending: false).snapshots(),
+                            builder: (context, snapshot) {
+                              List<DataRow> tttt = _messagesStreams(snapshot.data!);
+                              print("after builder");
+                              if (!snapshot.hasData) {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    backgroundColor: Colors.lightBlueAccent,
+                                  ),
+                                );
+                              }
+                              return DataTable(
+                                  columns: <DataColumn> [
+                                    DataColumn(label: Text('new')),
+                                    DataColumn(label: Text('new2')),
+                                    DataColumn(label: Text('new3')),
+                              ],
+
+
+                                  rows: tttt);
+                            }
+                        ),
+
+
+
+
                     ],
                   ),
                 ),
@@ -289,35 +319,33 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-//class MessagesStream extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return StreamBuilder<QuerySnapshot>(
-//      stream: _firestore
-//          .collection('message')
-//          .orderBy('time', descending: false)
-//          .snapshots(),
-//      builder: (context, snapshot) {
-//        if (!snapshot.hasData) {
-//          return Center(
-//            child: CircularProgressIndicator(
-//              backgroundColor: Colors.lightBlueAccent,
-//            ),
-//          );
-//        }
-//        return new ListView.builder(itemBuilder: (context, index) {
-//          DocumentSnapshot ds = snapshot.data!.docs[index];
-//          return new Text(ds['name']);
-//        });
-//      },
-//    );
-//    FlatButton(
-//      child: Container(),
-//      onPressed: (){
-//        _firestore.collection('message')
-//            .doc()
-//            .set({'name': 'NEWWWWW'});
-//      }
-//    );
-//  }
-//}
+
+  List<DataRow> _messagesStreams(QuerySnapshot snapshot)  {
+  print("method staart");
+    List<DataRow> newList = snapshot.docs.map((DocumentSnapshot Document) {
+
+      print('testing from cloud: ${Document['name']}');
+
+        return DataRow(
+            cells: <DataCell> [
+              const DataCell(
+                     Text('name')),
+              DataCell(
+              Text(Document['quantity']),
+            ),
+            DataCell(
+              Text(Document['details']),
+            ),
+
+          ]);
+
+    } ).toList();
+    return newList;
+
+
+
+
+  }
+
+
+
