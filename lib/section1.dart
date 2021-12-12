@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,6 +23,7 @@ class Section1 extends StatelessWidget {
         Expanded(
           flex: -1,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                   //height: 120.0,
@@ -77,6 +79,7 @@ class Section1 extends StatelessWidget {
               SizedBox(
                 height: 10.0,
               ),
+
               ElevatedButton.icon(
                 onPressed: () {
                   MyApp().firestore.collection('message').add({
