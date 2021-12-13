@@ -1,20 +1,40 @@
 import 'package:flutter/material.dart';
 import 'Firestore/database_manager.dart';
-import 'main.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Section1 extends StatelessWidget {
-  String? name;
-  String? qty;
-  String? details;
+class Section1 extends StatefulWidget {
+  final Function refresh;
+  Section1({Key? key, required this.refresh}) : super(key: key);
+
+  @override
+  State<Section1> createState() => _Section1State();
+}
+
+class _Section1State extends State<Section1> {
+  // String? name;
+
+  // String? qty;
+
+  // String? details;
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _quantityController = TextEditingController();
+  TextEditingController _detailsController = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _nameController.dispose();
+    _quantityController.dispose();
+    _detailsController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
+        const SizedBox(
           width: 120.0,
         ),
         Expanded(
@@ -22,16 +42,15 @@ class Section1 extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
+              const SizedBox(
                   //height: 120.0,
                   ),
               Container(
                 width: 400.0,
                 child: TextField(
-                  onChanged: (value) {
-                    name = value;
-                  },
-                  decoration: InputDecoration(
+                  controller: _nameController,
+                  onChanged: (value) {},
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Name',
                     contentPadding:
@@ -39,16 +58,15 @@ class Section1 extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10.0,
               ),
               Container(
                 width: 400.0,
                 child: TextField(
-                  onChanged: (value) {
-                    qty = value;
-                  },
-                  decoration: InputDecoration(
+                  controller: _quantityController,
+                  onChanged: (value) {},
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Qty',
                     contentPadding:
@@ -56,16 +74,15 @@ class Section1 extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10.0,
               ),
               Container(
                 width: 400.0,
                 child: TextField(
-                  onChanged: (value) {
-                    details = value;
-                  },
-                  decoration: InputDecoration(
+                  controller: _detailsController,
+                  onChanged: (value) {},
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Details',
                     contentPadding:
@@ -73,20 +90,23 @@ class Section1 extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10.0,
               ),
               ElevatedButton.icon(
                 onPressed: () {
                   FireStoreDataBase().collectionRef.add({
-                    'name': name,
-                    'quantity': qty,
-                    'details': details,
+                    'name': _nameController.text,
+                    'quantity': _quantityController.text,
+                    'details': _detailsController.text,
                   });
-                  //print(Section1().s());
+                  _nameController.clear();
+                  _detailsController.clear();
+                  _quantityController.clear();
+                  widget.refresh();
                 },
-                icon: Icon(Icons.save),
-                label: Text('Save'),
+                icon: const Icon(Icons.save),
+                label: const Text('Save'),
               ),
             ],
           ),

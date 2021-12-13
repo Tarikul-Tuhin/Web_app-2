@@ -8,6 +8,7 @@ class Section3 extends StatefulWidget {
 class _Section3State extends State<Section3> {
   @override
   Widget build(BuildContext context) {
+    print("ami notun build hoisi");
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [

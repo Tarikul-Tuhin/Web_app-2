@@ -14,8 +14,8 @@ void main() async {
       appId: "1:36192403048:web:99ef31f2026bb56513c5dd",
       messagingSenderId: "36192403048",
       projectId: "webcrud-13206",
-      // authDomain: "webcrud-13206.firebaseapp.com",
-      // storageBucket: "webcrud-13206.appspot.com",
+      authDomain: "webcrud-13206.firebaseapp.com",
+      storageBucket: "webcrud-13206.appspot.com",
     ),
   );
   runApp(MyApp());
@@ -36,6 +36,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  void refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -49,7 +53,9 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: 80.0,
                 ),
-                Section1(),
+                Section1(
+                  refresh: refresh,
+                ),
                 //Section2(),
                 SizedBox(
                   height: 50.0,
