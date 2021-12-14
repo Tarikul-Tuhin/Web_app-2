@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webdemo/section4_v2.dart';
+import 'package:webdemo/section4_v3.dart';
 import 'section1.dart';
 import 'section3.dart';
 
@@ -37,7 +38,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   void refresh() {
-    setState(() {});
+    // setState(() {});
   }
 
   @override
@@ -50,18 +51,18 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 80.0,
                 ),
                 Section1(
                   refresh: refresh,
                 ),
                 //Section2(),
-                SizedBox(
+                const SizedBox(
                   height: 50.0,
                 ),
                 Section3(),
-                Section4_v2(),
+                Section4_v3(),
               ],
             ),
           ),

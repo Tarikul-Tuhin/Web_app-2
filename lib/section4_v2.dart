@@ -17,7 +17,7 @@ class _Section4_v2State extends State<Section4_v2> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 100.0),
+      padding: const EdgeInsets.symmetric(horizontal: 100.0),
       child: FutureBuilder(
         future: FireStoreDataBase().getData(),
         builder: (context, snapshot) {

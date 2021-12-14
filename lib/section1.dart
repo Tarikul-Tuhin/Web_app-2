@@ -103,7 +103,7 @@ class _Section1State extends State<Section1> {
                   _nameController.clear();
                   _detailsController.clear();
                   _quantityController.clear();
-                  widget.refresh();
+                  // widget.refresh();
                 },
                 icon: const Icon(Icons.save),
                 label: const Text('Save'),
