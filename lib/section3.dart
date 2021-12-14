@@ -1,4 +1,12 @@
+import 'dart:typed_data';
+import 'dart:async';
+import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:file_picker/file_picker.dart';
 
 class Section3 extends StatefulWidget {
   @override
@@ -6,6 +14,9 @@ class Section3 extends StatefulWidget {
 }
 
 class _Section3State extends State<Section3> {
+  final firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
+
   @override
   Widget build(BuildContext context) {
     return Row(

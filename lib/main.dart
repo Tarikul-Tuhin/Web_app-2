@@ -11,13 +11,15 @@ import 'package:firebase_database/firebase_database.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: FirebaseOptions(
+    options: const FirebaseOptions(
       apiKey: "AIzaSyDCZOKOSOJh7NbBrfEY_PoNumJX8iUDtmo",
       appId: "1:62048379158:web:22eee593b44094a7293037",
       messagingSenderId: "62048379158",
       projectId: "web-app-a6290",
+      storageBucket: "web-app-a6290.appspot.com",
     ),
   );
+
   runApp(MyApp());
 }
 
@@ -55,6 +57,7 @@ class _HomePageState extends State<HomePage> {
                   height: 50.0,
                 ),
                 Section3(),
+
                 Section4_v2(),
               ],
             ),

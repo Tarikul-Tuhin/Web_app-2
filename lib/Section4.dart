@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'dart:html';
 
 import 'Firestore/database_manager.dart';
 
@@ -28,10 +29,12 @@ class _Section4_v2State extends State<Section4_v2> {
               "Something went wrong",
             );
           }
+
           if (snapshot.connectionState == ConnectionState.done) {
             dataList = snapshot.data as List;
             return buildItems(dataList);
           }
+
           return const Center(child: CircularProgressIndicator());
         },
       ),
@@ -55,6 +58,7 @@ class _Section4_v2State extends State<Section4_v2> {
               ),
               Text(dataList[index]["quantity"]),
               Text(dataList[index]["details"]),
+              //Image(image: dataList[index]["img"]),
             ],
           ),
           // subtitle: Text(dataList[index]["quantity"]),
