@@ -1,7 +1,12 @@
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'Firestore/database_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_database/firebase_database.dart';
 
 class Section1 extends StatefulWidget {
   final Function refresh;
@@ -17,6 +22,9 @@ class _Section1State extends State<Section1> {
   // String? qty;
 
   // String? details;
+  final firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
+
   TextEditingController _nameController = TextEditingController();
   TextEditingController _quantityController = TextEditingController();
   TextEditingController _detailsController = TextEditingController();
@@ -121,7 +129,40 @@ class _Section1State extends State<Section1> {
             fit: BoxFit.fill,
           ),
         ),
-        Expanded(flex: 6, child: Container()),
+        Expanded(
+          flex: 3,
+          child: IconButton(
+            icon: const Icon(Icons.upload),
+            color: Colors.red,
+            onPressed: () async {
+              final results = await FilePicker.platform.pickFiles(
+                allowMultiple: false,
+                type: FileType.custom,
+                allowedExtensions: ['png', 'jpg'],
+              );
+
+              if (results == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('No File Selected'),
+                  ),
+                );
+                return null;
+              }
+
+              Uint8List? path = results.files.first.bytes;
+              var filename = results.files.first.name;
+
+              // print(path);
+              print(filename);
+
+              await storage.ref().child('test/$filename').putData(path!);
+              // storage
+              //     .uploadFile(path, filename)
+              //     .then((value) => print('done'));
+            },
+          ),
+        ),
       ],
     );
   }

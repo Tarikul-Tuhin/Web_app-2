@@ -12,14 +12,14 @@ class _Section3State extends State<Section3> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(
+        const SizedBox(
           width: 120.0,
         ),
         Expanded(
           flex: 3,
           child: Container(
             width: 400.0,
-            child: TextField(
+            child: const TextField(
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: '🔍 Search',

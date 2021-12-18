@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:webdemo/section1_v2.dart';
 import 'package:webdemo/section4_v2.dart';
 import 'package:webdemo/section4_v3.dart';
-import 'section1.dart';
-import 'section3.dart';
+import 'package:webdemo/section4_v4.dart';
+// import 'section1.dart';
+// import 'section3.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,8 +46,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.brown,
+      ),
       home: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: const Text('Web Demo'),
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
@@ -54,15 +62,15 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(
                   height: 80.0,
                 ),
-                Section1(
+                Section1_v2(
                   refresh: refresh,
                 ),
                 //Section2(),
                 const SizedBox(
                   height: 50.0,
                 ),
-                Section3(),
-                Section4_v3(),
+                //Section3(),
+                Section4_v4(),
               ],
             ),
           ),
