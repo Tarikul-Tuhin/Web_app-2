@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class FireStoreDataBase {
-  List studentsList = [];
+  static List itemList = [];
   final CollectionReference collectionRef =
       FirebaseFirestore.instance.collection("message");
 
@@ -16,14 +16,13 @@ class FireStoreDataBase {
       // to get data from all documents sequentially
       await collectionRef.get().then((querySnapshot) {
         for (var result in querySnapshot.docs) {
-          studentsList.add(result.data());
-          print("data ekta paisi");
-          print(result.data());
-          //print(result);
+          itemList.add(result.data());
+          // print("data ekta paisi");
+          //print(result.data());
         }
       });
 
-      return studentsList;
+      return itemList;
     } catch (e) {
       debugPrint("Error - $e");
       return null;

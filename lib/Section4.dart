@@ -1,130 +1,247 @@
+import 'dart:io';
+
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:html';
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:csv/csv.dart';
 
 import 'Firestore/database_manager.dart';
 
-class Section4_v2 extends StatefulWidget {
-  const Section4_v2({Key? key}) : super(key: key);
-
+class Section4_v3 extends StatefulWidget {
+  Section4_v3({Key? key}) : super(key: key);
+  late Function refresh;
   @override
-  _Section4_v2State createState() => _Section4_v2State();
+  _Section4_v3State createState() => _Section4_v3State();
 }
 
-class _Section4_v2State extends State<Section4_v2> {
+class _Section4_v3State extends State<Section4_v3> {
   List dataList = [];
+  CollectionReference collectionRef =
+      FirebaseFirestore.instance.collection("message");
+
+  late String filePath;
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationSupportDirectory();
+    return directory.absolute.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    filePath = '$path/data.csv';
+    return File('$path/data.csv').create();
+  }
 
   @override
   Widget build(BuildContext context) {
-    FireStoreDataBase().getData();
-    //print(FireStoreDataBase().getData().toString());
-
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 100.0),
-      child: FutureBuilder(
-        future: FireStoreDataBase().getData(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Text(
-              "Something went wrong",
-            );
-          }
-
-          if (snapshot.connectionState == ConnectionState.done) {
-            dataList = snapshot.data as List;
-            return buildItems(dataList);
-          }
-
-          return const Center(child: CircularProgressIndicator());
-        },
-      ),
-      height: 150,
-      width: 700,
+      width: MediaQuery.of(context).size.width,
       color: Colors.transparent,
+      padding: const EdgeInsets.symmetric(horizontal: 100.0),
+      child: Column(
+        children: [
+          FlatButton(
+            onPressed: () {
+              //getCsv();
+              getData();
+            },
+            child: Text('Download'),
+            color: Colors.blue,
+          ),
+          StreamBuilder(
+            stream: collectionRef.snapshots(),
+            builder: (BuildContext context,
+                AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+              if (streamSnapshot.hasData) {
+                // print(streamSnapshot.data!.size.toInt());
+                return buildDataTable(streamSnapshot.data);
+              }
+              if (streamSnapshot.hasError) {
+                // print('error khaisi');
+                return const Text("Something went wrong");
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
+          ),
+        ],
+      ),
     );
   }
 
-  Widget buildItems(dataList) => ListView.separated(
-      padding: const EdgeInsets.all(8),
-      itemCount: dataList.length,
-      separatorBuilder: (BuildContext context, int index) => const Divider(),
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(
-                dataList[index]["name"],
-              ),
-              Text(dataList[index]["quantity"]),
-              Text(dataList[index]["details"]),
-              //Image(image: dataList[index]["img"]),
-            ],
-          ),
-          // subtitle: Text(dataList[index]["quantity"]),
-          // trailing: Text(
-          //   dataList[index]["details"],
-          // ),
-        );
-      });
-}
+  Widget buildDataTable(QuerySnapshot? snapshot) {
+    List<DataRow> rows = [];
+    for (var i in snapshot!.docs) {
+      rows.add(DataRow(cells: [
+        DataCell(Text(i['name'])),
+        DataCell(Text(i['quantity'])),
+        DataCell(Text(i['details'])),
+      ]));
+    }
 
-// import 'package:flutter/material.dart';
-// import 'main.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_storage/firebase_storage.dart';
-// import 'package:firebase_database/firebase_database.dart';
-//
-// class Section4 extends StatefulWidget {
-//   @override
-//   _Section4State createState() => _Section4State();
-// }
-//
-// class _Section4State extends State<Section4> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: EdgeInsets.only(left: 167.0),
-//       child: Row(
-//         children: [
-//           StreamBuilder<QuerySnapshot>(
-//               stream: MyApp()
-//                   .firestore
-//                   .collection('message')
-//                   .orderBy('time', descending: false)
-//                   .snapshots(),
-//               builder: (context, snapshot) {
-//                 if (!snapshot.hasData) {
-//                   return Center(
-//                     child: CircularProgressIndicator(
-//                       backgroundColor: Colors.lightBlueAccent,
-//                     ),
-//                   );
-//                 }
-//                 return DataTable(columns: <DataColumn>[
-//                   DataColumn(label: Text('new')),
-//                   DataColumn(label: Text('new2')),
-//                   DataColumn(label: Text('new3')),
-//                 ], rows: _messagesStreams(snapshot.data!));
-//               }),
-//         ],
-//       ),
-//     );
-//   }
-// }
-//
-// List<DataRow> _messagesStreams(QuerySnapshot snapshot) {
-//   List<DataRow> newList = snapshot.docs.map((DocumentSnapshot Document) {
-//     return DataRow(cells: <DataCell>[
-//       const DataCell(Text('name')),
-//       DataCell(
-//         Text(Document['quantity']),
-//       ),
-//       DataCell(
-//         Text(Document['details']),
-//       ),
-//     ]);
-//   }).toList();
-//   return newList;
-// }
+    return DataTable(
+      sortAscending: true,
+      sortColumnIndex: 0,
+      columns: const [
+        DataColumn(label: Text('Name')),
+        DataColumn(label: Text('Quantity')),
+        DataColumn(label: Text('Details')),
+      ],
+      rows: rows,
+    );
+  }
+
+  // Future getDocs() async {
+  //   QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection("collection").get();
+  //   for (int i = 0; i < querySnapshot.docs.length; i++) {
+  //     var a = querySnapshot.docs[i];
+  //     print(a.documentID);
+  //   }
+  // }
+
+  CollectionReference _collectionRef =
+      FirebaseFirestore.instance.collection('message');
+
+  List<List<dynamic>> rows = <List<dynamic>>[];
+
+  Future<void> getData() async {
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await _collectionRef.get();
+
+    // Get data from docs and convert map to List
+    final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+    var a = json.encode(allData);
+    print(allData);
+
+    // for (var i in allData){
+    //   print(i);
+    // }
+
+    // for (var i in a) {
+    //   // List o = [];
+    //   // o.add(i);
+    //   print('sort $i');
+    //   for (var book in i.keys) {
+    //     print('$book was written by ${i[book]}');
+    //   }
+
+    //Map kidsBooks = a;
+    // {
+    //   'Matilda': 'Roald Dahl',
+    //   'Green Eggs and Ham': 'Dr Seuss',
+    //   'Where the Wild Things Are': 'Maurice Sendak'
+    // };
+    // for (var book in kidsBooks.keys) {
+    //   print('${kidsBooks[book]}');
+    // }
+
+    // print(allData[0]);
+    // var c;
+    //
+    // for (var i in allData) {
+    //   // List o = [];
+    //   // o.add(i);
+    //   print('sort $i');
+    //   for (var book in i.keys) {
+    //     print('$book was written by ${i[book]}');
+    //   }
+    //print(i.runtimeType);
+
+    // print(i.details);
+    // var a = allData[i];
+    // print(i[details]);
+    // }
+    //print(allData);
+
+    // List b = [];
+    //
+    // b = allData.sublist(0, 2);
+    // print(b);
+
+    // List<List<dynamic>> rows = [];
+    //
+    // List<dynamic> row = [];
+    // row.add("Name");
+    // row.add("Quantity");
+    // row.add("Details");
+    // rows.add(row);
+    // for (int i = 0; i < allData.length; i++) {
+    //   List<dynamic> row = [];
+    //   row.add(allData[i]!["name"]);
+    //   row.add(allData[i]["qty"]);
+    //   row.add(allData[i]["details"]);
+    //   rows.add(row);
+    // }
+
+    // rows.add([
+    //   "Name",
+    //   "Gender",
+    //   "Phone Number",
+    //   "Email",
+    //   "Age",
+    //   "Area",
+    //   "Assembly",
+    //   "Meal Ticket"
+    // ]);
+    //
+    // if (allData!= null) {
+    //   for (int i = 0; i < allData.length; i++) {
+    //     List<dynamic> row = List<dynamic>();
+    //     row.add(cloud.data["collected"][i]["name"]);
+    //     row.add(cloud.data["collected"][i]["gender"]);
+    //     row.add(cloud.data["collected"][i]["phone"]);
+    //     row.add(cloud.data["collected"][i]["email"]);
+    //     row.add(cloud.data["collected"][i]["age_bracket"]);
+    //     row.add(cloud.data["collected"][i]["area"]);
+    //     row.add(cloud.data["collected"][i]["assembly"]);
+    //     row.add(cloud.data["collected"][i]["meal_ticket"]);
+    //     rows.add(row);
+    //   }
+
+    //File f = await _localFile;
+
+    //String csv = ListToCsvConverter().convert(allData);
+    //f.writeAsString(csv);
+  }
+
+  getCsv() async {
+    //List<List<dynamic>> rows = List<List<dynamic>>();
+
+    var cloud = await FirebaseFirestore.instance.collection("message");
+    print(cloud);
+
+    // rows.add([
+    //   "Name",
+    //   "Gender",
+    //   "Phone Number",
+    //   "Email",
+    //   "Age",
+    //   "Area",
+    //   "Assembly",
+    //   "Meal Ticket"
+    // ]);
+    //
+    // if (cloud.data != null) {
+    //   for (int i = 0; i < cloud.data["collected"].length; i++) {
+    //     List<dynamic> row = List<dynamic>();
+    //     row.add(cloud.data["collected"][i]["name"]);
+    //     row.add(cloud.data["collected"][i]["gender"]);
+    //     row.add(cloud.data["collected"][i]["phone"]);
+    //     row.add(cloud.data["collected"][i]["email"]);
+    //     row.add(cloud.data["collected"][i]["age_bracket"]);
+    //     row.add(cloud.data["collected"][i]["area"]);
+    //     row.add(cloud.data["collected"][i]["assembly"]);
+    //     row.add(cloud.data["collected"][i]["meal_ticket"]);
+    //     rows.add(row);
+    //   }
+    //
+    //   File f = await _localFile;
+    //
+    //   String csv = const ListToCsvConverter().convert(rows);
+    //   f.writeAsString(csv);
+  }
+}

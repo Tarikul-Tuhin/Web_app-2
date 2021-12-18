@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'section1.dart';
-import 'section3.dart';
 import 'Section4.dart';
-import 'package:provider/provider.dart';
+import 'section1_v2.dart';
+import 'section3.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +15,7 @@ void main() async {
       messagingSenderId: "62048379158",
       projectId: "web-app-a6290",
       storageBucket: "web-app-a6290.appspot.com",
+      authDomain: "web-app-a6290.firebaseapp.com",
     ),
   );
 
@@ -38,6 +37,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  void refresh() {
+    // setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -48,17 +51,18 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 80.0,
                 ),
-                Section1(),
+                Section1(
+                  refresh: refresh,
+                ),
                 //Section2(),
-                SizedBox(
+                const SizedBox(
                   height: 50.0,
                 ),
                 Section3(),
-
-                Section4_v2(),
+                Section4_v3(),
               ],
             ),
           ),

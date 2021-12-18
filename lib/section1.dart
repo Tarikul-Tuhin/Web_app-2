@@ -5,12 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webapp/Section4.dart';
 import 'main.dart';
-import 'package:webapp/Section4.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_database/firebase_database.dart';
-import 'package:provider/provider.dart';
 
 class Section1 extends StatefulWidget {
   @override
@@ -130,17 +128,40 @@ class _Section1State extends State<Section1> {
         Expanded(flex: 1, child: Container()),
         Expanded(
           flex: 3,
-          // child: FutureBuilder(
-          //   future: storage.,
-          //   builder: ,
-          // ),
-          child: Image.network(
-            'https://i.picsum.photos/id/48/200/200.jpg?hmac=3FKJwSlm1FM1GD916vZX2Z3HUjHsUXvQM3rYWYXsQvc',
-            height: 226,
-            //width: 250,
-            fit: BoxFit.fill,
+          child: FutureBuilder<Widget>(
+            future: getImage(context, "image002.jpg"),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Container(
+                  width: MediaQuery.of(context).size.width / 4.5,
+                  height: MediaQuery.of(context).size.height / 4.5,
+                  child: snapshot.data,
+                );
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                  width: MediaQuery.of(context).size.width / 4.5,
+                  height: MediaQuery.of(context).size.height / 4.5,
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return Container();
+            },
           ),
         ),
+        // Expanded(
+        //   flex: 3,
+        //   // child: FutureBuilder(
+        //   //   future: storage.,
+        //   //   builder: ,
+        //   // ),
+        //   // child: Image.network(
+        //   //   'https://i.picsum.photos/id/48/200/200.jpg?hmac=3FKJwSlm1FM1GD916vZX2Z3HUjHsUXvQM3rYWYXsQvc',
+        //   //   height: 226,
+        //   //   //width: 250,
+        //   //   fit: BoxFit.fill,
+        //   // ),
+        // ),
         Expanded(flex: 1, child: Container()),
         Expanded(
             flex: 1,
@@ -168,7 +189,18 @@ class _Section1State extends State<Section1> {
                   print(path);
                   print(filename);
 
-                  await storage.ref().child('test/$filename').putData(path!);
+                  var a;
+
+                  a = await storage
+                      .ref()
+                      .child('test/$filename')
+                      .putData(path!);
+                  print(a);
+                  a;
+
+                  String url = await a.getDownloadUrl();
+                  print(url);
+
                   // storage
                   //     .uploadFile(path, filename)
                   //     .then((value) => print('done'));
@@ -180,8 +212,35 @@ class _Section1State extends State<Section1> {
                 color: Colors.blue,
               ),
             )),
-        Expanded(flex: 2, child: Container()),
+        Expanded(
+            flex: 2,
+            child: Container(
+              child: Image.network(
+                  'https://firebasestorage.googleapis.com/v0/b/web-app-a6290.appspot.com/o/image002.jpg?alt=media&token=6bc49285-4ae4-47b3-9c20-6affebc2b93e'),
+            )),
       ],
     );
+  }
+}
+
+Future<Widget> getImage(BuildContext context, String ImageName) async {
+  late Image image;
+  await FireStorageService.loadImage(context, ImageName).then((value) {
+    image = Image.network(
+      value.toString(),
+      fit: BoxFit.scaleDown,
+    );
+  });
+  return image;
+}
+
+var b;
+
+class FireStorageService extends ChangeNotifier {
+  FireStorageService();
+  static Future<dynamic> loadImage(BuildContext context, String Image) async {
+    b = await firebase_storage.FirebaseStorage.instance;
+    return b.ref().child(Image).getDownloadURL();
+    print(b);
   }
 }
