@@ -3,13 +3,16 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
+import 'dart:io';
 
 import 'Firestore/database_manager.dart';
+import 'firebasejson.dart';
 
 class Section4_v3 extends StatefulWidget {
   Section4_v3({Key? key}) : super(key: key);
@@ -19,6 +22,8 @@ class Section4_v3 extends StatefulWidget {
 }
 
 class _Section4_v3State extends State<Section4_v3> {
+  List<Data> li = []; //for csv
+
   List dataList = [];
   CollectionReference collectionRef =
       FirebaseFirestore.instance.collection("message");
@@ -34,6 +39,29 @@ class _Section4_v3State extends State<Section4_v3> {
     final path = await _localPath;
     filePath = '$path/data.csv';
     return File('$path/data.csv').create();
+  }
+
+  CollectionReference ref = FirebaseFirestore.instance.collection("message");
+
+  void allData() async {
+    QuerySnapshot<Object?> sn = await ref.get();
+
+    //print(sn.docs[1]['name']);
+    //return sn;
+    String s = '';
+    List a = [];
+    for (var i in sn.docs) {
+      //s = s + i['name'] + ',' + i['quantity'] + ',' + i['details'];
+      a.add(i['name']);
+    }
+    print(a[0]);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    allData();
   }
 
   @override
@@ -74,13 +102,17 @@ class _Section4_v3State extends State<Section4_v3> {
 
   Widget buildDataTable(QuerySnapshot? snapshot) {
     List<DataRow> rows = [];
+    //List a = [];
     for (var i in snapshot!.docs) {
       rows.add(DataRow(cells: [
         DataCell(Text(i['name'])),
         DataCell(Text(i['quantity'])),
         DataCell(Text(i['details'])),
       ]));
+      //a.add(i['name']);
+
     }
+    // print(a);
 
     return DataTable(
       sortAscending: true,
@@ -114,12 +146,30 @@ class _Section4_v3State extends State<Section4_v3> {
     // Get data from docs and convert map to List
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
 
-    var a = json.encode(allData);
-    print(allData);
+    // var a = json.encode(allData);
+    // print(a);
+    // List b;
+    // var b = json.decode(a);
+    // print(b[0]);
 
-    // for (var i in allData){
-    //   print(i);
-    // }
+    //print(allData[2]);
+
+    Future<File> writeCounter(int counter) async {
+      final file = await _localFile;
+
+      // Write the file
+      return file.writeAsString('$counter');
+    }
+
+    for (var i in allData) {
+      print(i);
+      Future<File> writeCounter(int i) async {
+        final file = await _localFile;
+
+        // Write the file
+        return file.writeAsString('$i');
+      }
+    }
 
     // for (var i in a) {
     //   // List o = [];
