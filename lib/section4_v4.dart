@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:webdemo/Firestore/csv_api.dart';
 
 import 'Firestore/database_manager.dart';
 
@@ -15,6 +16,9 @@ class _Section4_v4State extends State<Section4_v4> {
   List dataList = [];
   CollectionReference collectionRef =
       FirebaseFirestore.instance.collection("products");
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _quantityController = TextEditingController();
+  TextEditingController _detailsController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +50,9 @@ class _Section4_v4State extends State<Section4_v4> {
             child: Container(
               height: 50.0,
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  CSV_api().localPath();
+                },
                 icon: Icon(Icons.download),
                 label: Text('Download'),
               ),
@@ -75,6 +81,9 @@ class _Section4_v4State extends State<Section4_v4> {
           },
         ),
       ),
+      const SizedBox(
+        height: 50,
+      )
     ]);
   }
 
@@ -84,16 +93,20 @@ class _Section4_v4State extends State<Section4_v4> {
     return link;
   }
 
-  Widget _buildDelEdit() {
+  Widget _buildDelEdit(QueryDocumentSnapshot<Object?> i) {
     return Row(
       children: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            _updateProduct(i);
+          },
           icon: const Icon(Icons.edit_rounded),
           color: Colors.blue,
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            _deleteProduct(i);
+          },
           icon: const Icon(Icons.delete_forever_rounded),
           color: Colors.red,
         ),
@@ -114,13 +127,11 @@ class _Section4_v4State extends State<Section4_v4> {
           height: 50,
           // fit: BoxFit.fill,
         )),
-        DataCell(_buildDelEdit()),
+        DataCell(_buildDelEdit(i)),
       ]));
     }
 
     return DataTable(
-      sortAscending: true,
-      sortColumnIndex: 0,
       columns: const [
         DataColumn(label: Text('Name')),
         DataColumn(label: Text('Quantity')),
@@ -130,5 +141,76 @@ class _Section4_v4State extends State<Section4_v4> {
       ],
       rows: rows,
     );
+  }
+
+  // Deleteing a product by id
+  Future<void> _deleteProduct(QueryDocumentSnapshot<Object?> i) async {
+    await collectionRef.doc(i.id).delete();
+  }
+
+  Future<void> _updateProduct(QueryDocumentSnapshot<Object?> i) async {
+    _nameController.text = i['name'];
+    _quantityController.text = i['quantity'];
+    _detailsController.text = i['details'];
+
+    await showDialog(
+        context: context,
+        builder: (BuildContext cxt) {
+          return AlertDialog(
+            title: const Text('Edit Item'),
+            elevation: 10,
+            actions: <Widget>[
+              ElevatedButton.icon(
+                onPressed: () async {
+                  final String? nm = _nameController.text;
+                  final String? qnt = _quantityController.text;
+                  final String? dtl = _detailsController.text;
+
+                  await collectionRef
+                      .doc(i.id)
+                      .update({'name': nm, 'details': dtl, 'quantity': qnt});
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.save),
+                label: const Text('Save'),
+              )
+            ],
+            content: Container(
+              width: 300,
+              height: 300,
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _nameController,
+                    onChanged: (value) {},
+                    decoration: const InputDecoration(
+                      labelText: 'Name',
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 10.0),
+                    ),
+                  ),
+                  TextField(
+                    controller: _quantityController,
+                    onChanged: (value) {},
+                    decoration: const InputDecoration(
+                      labelText: 'Quantity',
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 10.0),
+                    ),
+                  ),
+                  TextField(
+                    controller: _detailsController,
+                    onChanged: (value) {},
+                    decoration: const InputDecoration(
+                      labelText: 'Details',
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 10.0),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
