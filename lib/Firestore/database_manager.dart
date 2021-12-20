@@ -10,15 +10,9 @@ class FireStoreDataBase {
 
   Future getData() async {
     try {
-      //to get data from a single/particular document alone.
-      // var temp = await collectionRef.doc("<your document ID here>").get();
-
-      // to get data from all documents sequentially
       await collectionRef.get().then((querySnapshot) {
         for (var result in querySnapshot.docs) {
           itemList.add(result.data());
-          // print("data ekta paisi");
-          // print(result.data());
         }
       });
 
@@ -27,5 +21,10 @@ class FireStoreDataBase {
       debugPrint("Error - $e");
       return null;
     }
+  }
+
+  getQueryData(String query) {
+    // print('this is the query: $query');
+    return collectionRef.where('name', isEqualTo: query).snapshots();
   }
 }

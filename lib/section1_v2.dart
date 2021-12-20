@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:webdemo/testing.dart';
 import 'Firestore/database_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -193,7 +194,23 @@ class _Section1_v2State extends State<Section1_v2> {
             fit: BoxFit.fill,
           ),
         ),
-        Expanded(flex: 3, child: Container()),
+        Expanded(
+          flex: 3,
+          child: Container(
+              // height: 50.0,
+              // padding: EdgeInsets.symmetric(horizontal: 50),
+              // child: ElevatedButton.icon(
+              //   onPressed: () async {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(builder: (context) => FilePickerDemo()),
+              //     );
+              //   },
+              //   icon: const Icon(Icons.tablet_android_outlined),
+              //   label: const Text('TESTING'),
+              // ),
+              ),
+        ),
       ],
     );
   }

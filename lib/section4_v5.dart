@@ -5,20 +5,21 @@ import 'package:webdemo/Firestore/csv_api.dart';
 
 import 'Firestore/database_manager.dart';
 
-class Section4_v4 extends StatefulWidget {
-  Section4_v4({Key? key}) : super(key: key);
+class Section4_v5 extends StatefulWidget {
+  Section4_v5({Key? key}) : super(key: key);
   late Function refresh;
   @override
-  _Section4_v4State createState() => _Section4_v4State();
+  _Section4_v5State createState() => _Section4_v5State();
 }
 
-class _Section4_v4State extends State<Section4_v4> {
+class _Section4_v5State extends State<Section4_v5> {
   List dataList = [];
   CollectionReference collectionRef =
       FirebaseFirestore.instance.collection("products");
   TextEditingController _nameController = TextEditingController();
   TextEditingController _quantityController = TextEditingController();
   TextEditingController _detailsController = TextEditingController();
+  TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +34,12 @@ class _Section4_v4State extends State<Section4_v4> {
             flex: 3,
             child: Container(
               width: 400.0,
-              child: const TextField(
-                decoration: InputDecoration(
+              child: TextField(
+                onChanged: (text) {
+                  setState(() {});
+                },
+                controller: _searchController,
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: '🔍 Search',
                 ),
@@ -66,7 +71,9 @@ class _Section4_v4State extends State<Section4_v4> {
         color: Colors.transparent,
         padding: const EdgeInsets.symmetric(horizontal: 100.0),
         child: StreamBuilder(
-          stream: collectionRef.snapshots(),
+          stream: (_searchController.text.isEmpty)
+              ? collectionRef.snapshots()
+              : FireStoreDataBase().getQueryData(_searchController.text),
           builder: (BuildContext context,
               AsyncSnapshot<QuerySnapshot> streamSnapshot) {
             if (streamSnapshot.hasData) {
